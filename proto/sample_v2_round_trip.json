@@ -30,6 +30,42 @@
             "scoreDisplayMode": "notApplicable",
             "title": "`[aria-*]` attributes match their roles"
         },
+        "aria-hidden-body": {
+            "description": "Assistive technologies, like screen readers, work inconsistently when `aria-hidden=\"true\"` is set on the document `<body>`. [Learn more](https://web.dev/aria-hidden-body/).",
+            "details": {
+                "headings": [],
+                "items": [],
+                "type": "table"
+            },
+            "id": "aria-hidden-body",
+            "score": 1.0,
+            "scoreDisplayMode": "binary",
+            "title": "`[aria-hidden=\"true\"]` is not present on the document `<body>`"
+        },
+        "aria-hidden-focus": {
+            "description": "Focusable descendents within an `[aria-hidden=\"true\"]` element prevent those interactive elements from being available to users of assistive technologies like screen readers. [Learn more](https://web.dev/aria-hidden-focus/).",
+            "details": {
+                "headings": [],
+                "items": [],
+                "type": "table"
+            },
+            "id": "aria-hidden-focus",
+            "score": 1.0,
+            "scoreDisplayMode": "binary",
+            "title": "`[aria-hidden=\"true\"]` elements do not contain focusable descendents"
+        },
+        "aria-input-field-name": {
+            "description": "When an input field doesn't have an accessible name, screen readers announce it with a generic name, making it unusable for users who rely on screen readers. [Learn more](https://web.dev/aria-input-field-name/).",
+            "details": {
+                "headings": [],
+                "items": [],
+                "type": "table"
+            },
+            "id": "aria-input-field-name",
+            "score": 1.0,
+            "scoreDisplayMode": "binary",
+            "title": "ARIA input fields have accessible names"
+        },
         "aria-required-attr": {
             "description": "Some ARIA roles have required attributes that describe the state of the element to screen readers. [Learn more](https://web.dev/aria-required-attr/).",
             "id": "aria-required-attr",
@@ -57,6 +93,18 @@
             "score": null,
             "scoreDisplayMode": "notApplicable",
             "title": "`[role]` values are valid"
+        },
+        "aria-toggle-field-name": {
+            "description": "When a toggle field doesn't have an accessible name, screen readers announce it with a generic name, making it unusable for users who rely on screen readers. [Learn more](https://web.dev/aria-toggle-field-label/).",
+            "details": {
+                "headings": [],
+                "items": [],
+                "type": "table"
+            },
+            "id": "aria-toggle-field-name",
+            "score": 1.0,
+            "scoreDisplayMode": "binary",
+            "title": "ARIA toggle fields have accessible names"
         },
         "aria-valid-attr": {
             "description": "Assistive technologies, like screen readers, can't interpret ARIA attributes with invalid names. [Learn more](https://web.dev/aria-valid-attr/).",
@@ -408,31 +456,33 @@
                         "text": "Deprecation / Warning"
                     },
                     {
-                        "itemType": "url",
-                        "key": "url",
+                        "itemType": "source-location",
+                        "key": "source",
                         "text": "URL"
-                    },
-                    {
-                        "itemType": "text",
-                        "key": "lineNumber",
-                        "text": "Line"
                     }
                 ],
                 "items": [
                     {
-                        "lineNumber": 322.0,
-                        "source": "deprecation",
-                        "url": "http://localhost:10200/dobetterweb/dbw_tester.html",
+                        "source": {
+                            "column": 6.0,
+                            "line": 322.0,
+                            "type": "source-location",
+                            "url": "http://localhost:10200/dobetterweb/dbw_tester.html",
+                            "urlProvider": "network"
+                        },
                         "value": "Synchronous XMLHttpRequest on the main thread is deprecated because of its detrimental effects to the end user's experience. For more help, check https://xhr.spec.whatwg.org/."
                     },
                     {
-                        "lineNumber": 325.0,
-                        "source": "deprecation",
-                        "url": "http://localhost:10200/dobetterweb/dbw_tester.html",
+                        "source": {
+                            "column": 9.0,
+                            "line": 325.0,
+                            "type": "source-location",
+                            "url": "http://localhost:10200/dobetterweb/dbw_tester.html",
+                            "urlProvider": "network"
+                        },
                         "value": "'window.webkitStorageInfo' is deprecated. Please use 'navigator.webkitTemporaryStorage' or 'navigator.webkitPersistentStorage' instead."
                     },
                     {
-                        "source": "deprecation",
                         "value": "/deep/ combinator is no longer supported in CSS dynamic profile.It is now effectively no-op, acting as if it were a descendant combinator. /deep/ combinator will be removed, and will be invalid at M65. You should remove it. See https://www.chromestatus.com/features/4964279606312960 for more details."
                     }
                 ],
@@ -552,17 +602,29 @@
             "scoreDisplayMode": "numeric",
             "title": "Avoids an excessive DOM size"
         },
-        "duplicate-id": {
-            "description": "The value of an id attribute must be unique to prevent other instances from being overlooked by assistive technologies. [Learn more](https://web.dev/duplicate-id/).",
+        "duplicate-id-active": {
+            "description": "All focusable elements must have a unique `id` to ensure that they're visible to assistive technologies. [Learn more](https://web.dev/duplicate-id-active/).",
             "details": {
                 "headings": [],
                 "items": [],
                 "type": "table"
             },
-            "id": "duplicate-id",
+            "id": "duplicate-id-active",
             "score": 1.0,
             "scoreDisplayMode": "binary",
-            "title": "`[id]` attributes on the page are unique"
+            "title": "`[id]` attributes on active, focusable elements are unique"
+        },
+        "duplicate-id-aria": {
+            "description": "The value of an ARIA ID must be unique to prevent other instances from being overlooked by assistive technologies. [Learn more](https://web.dev/duplicate-id-aria/).",
+            "details": {
+                "headings": [],
+                "items": [],
+                "type": "table"
+            },
+            "id": "duplicate-id-aria",
+            "score": 1.0,
+            "scoreDisplayMode": "binary",
+            "title": "ARIA IDs are unique"
         },
         "efficient-animated-content": {
             "description": "Large GIFs are inefficient for delivering animated content. Consider using MPEG4/WebM videos for animations and PNG/WebP for static images instead of GIF to save network bytes. [Learn more](https://web.dev/efficient-animated-content)",
@@ -758,7 +820,7 @@
             "details": {
                 "headings": [
                     {
-                        "itemType": "url",
+                        "itemType": "source-location",
                         "key": "source",
                         "text": "Source"
                     },
@@ -782,7 +844,10 @@
                     {
                         "coverage": "100.00%",
                         "fontSize": "\u2265 12px",
-                        "source": "Legible text"
+                        "source": {
+                            "type": "code",
+                            "value": "Legible text"
+                        }
                     }
                 ],
                 "type": "table"
@@ -792,6 +857,18 @@
             "score": 1.0,
             "scoreDisplayMode": "binary",
             "title": "Document uses legible font sizes"
+        },
+        "form-field-multiple-labels": {
+            "description": "Form fields with multiple labels can be confusingly announced by assistive technologies like screen readers which use either the first, the last, or all of the labels. [Learn more](https://web.dev/form-field-multiple-labels/).",
+            "details": {
+                "headings": [],
+                "items": [],
+                "type": "table"
+            },
+            "id": "form-field-multiple-labels",
+            "score": 1.0,
+            "scoreDisplayMode": "binary",
+            "title": "No form fields have multiple labels"
         },
         "frame-title": {
             "description": "Screen reader users rely on frame titles to describe the contents of frames. [Learn more](https://web.dev/frame-title/).",
@@ -832,12 +909,17 @@
             "scoreDisplayMode": "binary",
             "title": "Requests the geolocation permission on page load"
         },
-        "heading-levels": {
-            "description": "Headings are used to create an outline for the page and heading levels are not skipped. [Learn more](https://web.dev/heading-levels/).",
-            "id": "heading-levels",
-            "score": null,
-            "scoreDisplayMode": "manual",
-            "title": "Headings don't skip levels"
+        "heading-order": {
+            "description": "Properly ordered headings that do not skip levels convey the semantic structure of the page, making it easier to navigate and understand when using assistive technologies. [Learn more](https://web.dev/heading-order/).",
+            "details": {
+                "headings": [],
+                "items": [],
+                "type": "table"
+            },
+            "id": "heading-order",
+            "score": 1.0,
+            "scoreDisplayMode": "binary",
+            "title": "Heading elements appear in a sequentially-descending order"
         },
         "hreflang": {
             "description": "hreflang links tell search engines what version of a page they should list in search results for a given language or region. [Learn more](https://web.dev/hreflang).",
@@ -1094,6 +1176,21 @@
         "js-libraries": {
             "description": "All front-end JavaScript libraries detected on the page. [Learn more](https://web.dev/js-libraries).",
             "details": {
+                "debugData": {
+                    "stacks": [
+                        {
+                            "id": "jquery",
+                            "version": "2.1.1"
+                        },
+                        {
+                            "id": "jquery-fast"
+                        },
+                        {
+                            "id": "wordpress"
+                        }
+                    ],
+                    "type": "debugdata"
+                },
                 "headings": [
                     {
                         "itemType": "text",
@@ -1111,10 +1208,6 @@
                         "name": "jQuery",
                         "npm": "jquery",
                         "version": "2.1.1"
-                    },
-                    {
-                        "name": "jQuery (Fast path)",
-                        "npm": "jquery"
                     },
                     {
                         "name": "WordPress"
@@ -1188,6 +1281,15 @@
             "score": 0.0,
             "scoreDisplayMode": "binary",
             "title": "Form elements do not have associated labels"
+        },
+        "largest-contentful-paint": {
+            "description": "Largest Contentful Paint marks the time at which the largest text or image is painted. [Learn More](https://web.dev/largest-contentful-paint)",
+            "displayValue": "4.9\u00a0s",
+            "id": "largest-contentful-paint",
+            "numericValue": 4927.278,
+            "score": 0.31,
+            "scoreDisplayMode": "numeric",
+            "title": "Largest Contentful Paint"
         },
         "layout-table": {
             "description": "A table being used for layout purposes should not include data elements, such as the th or caption elements or the summary attribute, because this can create a confusing experience for screen reader users. [Learn more](https://web.dev/layout-table/).",
@@ -1450,7 +1552,7 @@
             "title": "The user's focus is directed to new content added to the page"
         },
         "max-potential-fid": {
-            "description": "The maximum potential First Input Delay that your users could experience is the duration, in milliseconds, of the longest task. [Learn more](https://developers.google.com/web/updates/2018/05/first-input-delay).",
+            "description": "The maximum potential First Input Delay that your users could experience is the duration of the longest task. [Learn more](https://web.dev/lighthouse-max-potential-fid).",
             "displayValue": "120\u00a0ms",
             "id": "max-potential-fid",
             "numericValue": 122.537,
@@ -1498,6 +1600,9 @@
                         "firstMeaningfulPaintTs": 185607289048.0,
                         "interactive": 4927.0,
                         "interactiveTs": 185608247190.0,
+                        "largestContentfulPaint": 4927.0,
+                        "largestContentfulPaintTs": 185608247190.0,
+                        "maxPotentialFID": 123.0,
                         "observedDomContentLoaded": 4901.0,
                         "observedDomContentLoadedTs": 185608220734.0,
                         "observedFirstContentfulPaint": 3969.0,
@@ -1508,6 +1613,8 @@
                         "observedFirstPaintTs": 185607289043.0,
                         "observedFirstVisualChange": 3969.0,
                         "observedFirstVisualChangeTs": 185607288912.0,
+                        "observedLargestContentfulPaint": 4927.0,
+                        "observedLargestContentfulPaintTs": 185608247190.0,
                         "observedLastVisualChange": 4791.0,
                         "observedLastVisualChangeTs": 185608110912.0,
                         "observedLoad": 4924.0,
@@ -1529,7 +1636,7 @@
                 "type": "debugdata"
             },
             "id": "metrics",
-            "numericValue": 4927.278,
+            "numericValue": 4927.0,
             "score": null,
             "scoreDisplayMode": "informative",
             "title": "Metrics"
@@ -2101,19 +2208,19 @@
                         "sizeOverBudget": 72955.0
                     },
                     {
-                        "countOverBudget": "8 requests",
+                        "countOverBudget": "7 requests",
                         "label": "Total",
-                        "requestCount": 18.0,
+                        "requestCount": 17.0,
                         "resourceType": "total",
-                        "size": 160738.0,
-                        "sizeOverBudget": 58338.0
+                        "size": 160517.0,
+                        "sizeOverBudget": 58117.0
                     },
                     {
                         "label": "Other",
-                        "requestCount": 2.0,
+                        "requestCount": 1.0,
                         "resourceType": "other",
-                        "size": 12861.0,
-                        "sizeOverBudget": 7741.0
+                        "size": 12640.0,
+                        "sizeOverBudget": 7520.0
                     },
                     {
                         "countOverBudget": "1 request",
@@ -2298,9 +2405,9 @@
                 "items": [
                     {
                         "label": "Total",
-                        "requestCount": 18.0,
+                        "requestCount": 17.0,
                         "resourceType": "total",
-                        "size": 160738.0
+                        "size": 160517.0
                     },
                     {
                         "label": "Script",
@@ -2322,9 +2429,9 @@
                     },
                     {
                         "label": "Other",
-                        "requestCount": 2.0,
+                        "requestCount": 1.0,
                         "resourceType": "other",
-                        "size": 12861.0
+                        "size": 12640.0
                     },
                     {
                         "label": "Stylesheet",
@@ -2353,7 +2460,7 @@
                 ],
                 "type": "table"
             },
-            "displayValue": "18 requests \u2022 157 KB",
+            "displayValue": "17 requests \u2022 157 KB",
             "id": "resource-summary",
             "score": null,
             "scoreDisplayMode": "informative",
@@ -2772,6 +2879,21 @@
             "score": 1.0,
             "scoreDisplayMode": "numeric",
             "title": "Remove unused CSS"
+        },
+        "unused-javascript": {
+            "description": "Remove unused JavaScript to reduce bytes consumed by network activity. [Learn more](https://developers.google.com/web/fundamentals/performance/optimizing-javascript/code-splitting).",
+            "details": {
+                "headings": [],
+                "items": [],
+                "overallSavingsBytes": 0.0,
+                "overallSavingsMs": 0.0,
+                "type": "opportunity"
+            },
+            "id": "unused-javascript",
+            "numericValue": 0.0,
+            "score": 1.0,
+            "scoreDisplayMode": "numeric",
+            "title": "Remove unused JavaScript"
         },
         "use-landmarks": {
             "description": "Landmark elements (<main>, <nav>, etc.) are used to improve the keyboard navigation of the page for assistive technology. [Learn more](https://web.dev/use-landmarks/).",
@@ -3236,6 +3358,21 @@
                 },
                 {
                     "group": "a11y-aria",
+                    "id": "aria-hidden-body",
+                    "weight": 10.0
+                },
+                {
+                    "group": "a11y-aria",
+                    "id": "aria-hidden-focus",
+                    "weight": 3.0
+                },
+                {
+                    "group": "a11y-aria",
+                    "id": "aria-input-field-name",
+                    "weight": 3.0
+                },
+                {
+                    "group": "a11y-aria",
                     "id": "aria-required-attr",
                     "weight": 0.0
                 },
@@ -3253,6 +3390,11 @@
                     "group": "a11y-aria",
                     "id": "aria-roles",
                     "weight": 0.0
+                },
+                {
+                    "group": "a11y-aria",
+                    "id": "aria-toggle-field-name",
+                    "weight": 3.0
                 },
                 {
                     "group": "a11y-aria",
@@ -3300,14 +3442,29 @@
                     "weight": 3.0
                 },
                 {
-                    "group": "a11y-best-practices",
-                    "id": "duplicate-id",
-                    "weight": 1.0
+                    "group": "a11y-navigation",
+                    "id": "duplicate-id-active",
+                    "weight": 3.0
+                },
+                {
+                    "group": "a11y-aria",
+                    "id": "duplicate-id-aria",
+                    "weight": 10.0
+                },
+                {
+                    "group": "a11y-names-labels",
+                    "id": "form-field-multiple-labels",
+                    "weight": 2.0
                 },
                 {
                     "group": "a11y-names-labels",
                     "id": "frame-title",
                     "weight": 0.0
+                },
+                {
+                    "group": "a11y-navigation",
+                    "id": "heading-order",
+                    "weight": 2.0
                 },
                 {
                     "group": "a11y-language",
@@ -3436,10 +3593,6 @@
                     "weight": 0.0
                 },
                 {
-                    "id": "heading-levels",
-                    "weight": 0.0
-                },
-                {
                     "id": "use-landmarks",
                     "weight": 0.0
                 }
@@ -3447,7 +3600,7 @@
             "description": "These checks highlight opportunities to [improve the accessibility of your web app](https://developers.google.com/web/fundamentals/accessibility). Only a subset of accessibility issues can be automatically detected so manual testing is also encouraged.",
             "id": "accessibility",
             "manualDescription": "These items address areas which an automated testing tool cannot cover. Learn more in our guide on [conducting an accessibility review](https://developers.google.com/web/fundamentals/accessibility/how-to-review).",
-            "score": 0.46,
+            "score": 0.66,
             "title": "Accessibility"
         },
         "best-practices": {
@@ -3531,6 +3684,11 @@
                 },
                 {
                     "group": "metrics",
+                    "id": "largest-contentful-paint",
+                    "weight": 0.0
+                },
+                {
+                    "group": "metrics",
                     "id": "speed-index",
                     "weight": 4.0
                 },
@@ -3585,6 +3743,11 @@
                 {
                     "group": "load-opportunities",
                     "id": "unused-css-rules",
+                    "weight": 0.0
+                },
+                {
+                    "group": "load-opportunities",
+                    "id": "unused-javascript",
                     "weight": 0.0
                 },
                 {
@@ -3972,8 +4135,17 @@
             "auditGroupExpandTooltip": "Show audits",
             "crcInitialNavigation": "Initial Navigation",
             "crcLongestDurationLabel": "Maximum critical path latency:",
+            "dropdownCopyJSON": "Copy JSON",
+            "dropdownDarkTheme": "Toggle Dark Theme",
+            "dropdownPrintExpanded": "Print Expanded",
+            "dropdownPrintSummary": "Print Summary",
+            "dropdownSaveGist": "Save as Gist",
+            "dropdownSaveHTML": "Save as HTML",
+            "dropdownSaveJSON": "Save as JSON",
+            "dropdownViewer": "Open in Viewer",
             "errorLabel": "Error!",
             "errorMissingAuditInfo": "Report error: no audit information",
+            "footerIssue": "File an issue",
             "labDataTitle": "Lab Data",
             "lsPerformanceCategoryDescription": "[Lighthouse](https://developers.google.com/web/tools/lighthouse/) analysis of the current page on an emulated mobile network. Values are estimated and may vary.",
             "manualAuditsGroupTitle": "Additional items to manually check",
@@ -3981,9 +4153,23 @@
             "opportunityResourceColumnLabel": "Opportunity",
             "opportunitySavingsColumnLabel": "Estimated Savings",
             "passedAuditsGroupTitle": "Passed audits",
+            "runtimeDesktopEmulation": "Emulated Desktop",
+            "runtimeMobileEmulation": "Emulated Nexus 5X",
+            "runtimeNoEmulation": "No emulation",
+            "runtimeSettingsBenchmark": "CPU/Memory Power",
+            "runtimeSettingsCPUThrottling": "CPU throttling",
+            "runtimeSettingsDevice": "Device",
+            "runtimeSettingsFetchTime": "Fetch Time",
+            "runtimeSettingsNetworkThrottling": "Network throttling",
+            "runtimeSettingsTitle": "Runtime Settings",
+            "runtimeSettingsUA": "User agent (host)",
+            "runtimeSettingsUANetwork": "User agent (network)",
+            "runtimeSettingsUrl": "URL",
+            "runtimeUnknown": "Unknown",
             "snippetCollapseButtonLabel": "Collapse snippet",
             "snippetExpandButtonLabel": "Expand snippet",
             "thirdPartyResourcesLabel": "Show 3rd-party resources",
+            "throttlingProvided": "Provided by environment",
             "toplevelWarningsMessage": "There were issues affecting this run of Lighthouse:",
             "varianceDisclaimer": "Values are estimated and may vary. The performance score is [based only on these metrics](https://github.com/GoogleChrome/lighthouse/blob/d2ec9ffbb21de9ad1a0f86ed24575eda32c796f0/docs/scoring.md#how-are-the-scores-weighted).",
             "warningAuditsGroupTitle": "Passed audits but with warnings",
@@ -4005,9 +4191,9 @@
                 "unminified-javascript": "A number of [WordPress plugins](https://wordpress.org/plugins/search/minify+javascript/) can speed up your site by concatenating, minifying, and compressing your scripts. You may also want to use a build process to do this minification up front if possible.",
                 "unused-css-rules": "Consider reducing, or switching, the number of [WordPress plugins](https://wordpress.org/plugins/) loading unused CSS in your page. To identify plugins that are adding extraneous CSS, try running [code coverage](https://developers.google.com/web/updates/2017/04/devtools-release-notes#coverage) in Chrome DevTools. You can identify the theme/plugin responsible from the URL of the stylesheet. Look out for plugins that have many stylesheets in the list which have a lot of red in code coverage. A plugin should only enqueue a stylesheet if it is actually used on the page.",
                 "unused-javascript": "Consider reducing, or switching, the number of [WordPress plugins](https://wordpress.org/plugins/) loading unused JavaScript in your page. To identify plugins that are adding extraneous JS, try running [code coverage](https://developers.google.com/web/updates/2017/04/devtools-release-notes#coverage) in Chrome DevTools. You can identify the theme/plugin responsible from the URL of the script. Look out for plugins that have many scripts in the list which have a lot of red in code coverage. A plugin should only enqueue a script if it is actually used on the page.",
-                "uses-long-cache-ttl": "Read about [Browser Caching in WordPress](https://codex.wordpress.org/WordPress_Optimization#Browser_Caching).",
+                "uses-long-cache-ttl": "Read about [Browser Caching in WordPress](https://wordpress.org/support/article/optimization/#browser-caching).",
                 "uses-optimized-images": "Consider using an [image optimization WordPress plugin](https://wordpress.org/plugins/search/optimize+images/) that compresses your images while retaining quality.",
-                "uses-responsive-images": "Upload images directly through the [media library](https://codex.wordpress.org/Media_Library_Screen) to ensure that the required image sizes are available, and then insert them from the media library or use the image widget to ensure the optimal image sizes are used (including those for the responsive breakpoints). Avoid using `Full Size` images unless the dimensions are adequate for their usage. [Learn More](https://codex.wordpress.org/Inserting_Images_into_Posts_and_Pages#Image_Size).",
+                "uses-responsive-images": "Upload images directly through the [media library](https://wordpress.org/support/article/media-library-screen/) to ensure that the required image sizes are available, and then insert them from the media library or use the image widget to ensure the optimal image sizes are used (including those for the responsive breakpoints). Avoid using `Full Size` images unless the dimensions are adequate for their usage. [Learn More](https://wordpress.org/support/article/inserting-images-into-posts-and-pages/).",
                 "uses-text-compression": "You can enable text compression in your web server configuration.",
                 "uses-webp-images": "Consider using a [plugin](https://wordpress.org/plugins/search/convert+webp/) or service that will automatically convert your uploaded images to the optimal formats."
             },
@@ -4124,6 +4310,18 @@
                 "duration": 100.0,
                 "entryType": "measure",
                 "name": "lh:computed:FirstMeaningfulPaint",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
+                "name": "lh:audit:largest-contentful-paint",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
+                "name": "lh:computed:LargestContentfulPaint",
                 "startTime": 0.0
             },
             {
@@ -4447,7 +4645,7 @@
             {
                 "duration": 100.0,
                 "entryType": "measure",
-                "name": "lh:computed:LargestContentfulPaint",
+                "name": "lh:computed:TimingSummary",
                 "startTime": 0.0
             },
             {
@@ -4513,6 +4711,24 @@
             {
                 "duration": 100.0,
                 "entryType": "measure",
+                "name": "lh:audit:aria-hidden-body",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
+                "name": "lh:audit:aria-hidden-focus",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
+                "name": "lh:audit:aria-input-field-name",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
                 "name": "lh:audit:aria-required-attr",
                 "startTime": 0.0
             },
@@ -4532,6 +4748,12 @@
                 "duration": 100.0,
                 "entryType": "measure",
                 "name": "lh:audit:aria-roles",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
+                "name": "lh:audit:aria-toggle-field-name",
                 "startTime": 0.0
             },
             {
@@ -4591,13 +4813,31 @@
             {
                 "duration": 100.0,
                 "entryType": "measure",
-                "name": "lh:audit:duplicate-id",
+                "name": "lh:audit:duplicate-id-active",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
+                "name": "lh:audit:duplicate-id-aria",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
+                "name": "lh:audit:form-field-multiple-labels",
                 "startTime": 0.0
             },
             {
                 "duration": 100.0,
                 "entryType": "measure",
                 "name": "lh:audit:frame-title",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
+                "name": "lh:audit:heading-order",
                 "startTime": 0.0
             },
             {
@@ -4735,12 +4975,6 @@
             {
                 "duration": 100.0,
                 "entryType": "measure",
-                "name": "lh:audit:heading-levels",
-                "startTime": 0.0
-            },
-            {
-                "duration": 100.0,
-                "entryType": "measure",
                 "name": "lh:audit:interactive-element-affordance",
                 "startTime": 0.0
             },
@@ -4801,6 +5035,12 @@
             {
                 "duration": 100.0,
                 "entryType": "measure",
+                "name": "lh:computed:UnusedCSS",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
                 "name": "lh:computed:FirstContentfulPaint",
                 "startTime": 0.0
             },
@@ -4826,6 +5066,12 @@
                 "duration": 100.0,
                 "entryType": "measure",
                 "name": "lh:audit:unused-css-rules",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
+                "name": "lh:audit:unused-javascript",
                 "startTime": 0.0
             },
             {
