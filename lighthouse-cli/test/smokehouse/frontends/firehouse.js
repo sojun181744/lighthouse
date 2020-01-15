@@ -31,10 +31,9 @@ async function runFirehouse(options) {
         continue;
       }
 
-      console.log(`====== ${expected.lhr.requestedUrl} ======`);
       const reasonToSkip = skip && skip(test, expected);
       if (reasonToSkip) {
-        console.log(`skipping: ${reasonToSkip}`);
+        console.log(`skipping ${expected.lhr.requestedUrl}: ${reasonToSkip}`);
         continue;
       }
 
