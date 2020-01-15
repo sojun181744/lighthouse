@@ -19,7 +19,7 @@ const {runSmokehouse} = require('../smokehouse.js');
 /**
  * @param {Smokehouse.FirehouseOptions} options
  */
-async function runSmokes(options) {
+async function runFirehouse(options) {
   const {smokehouse, urlFilterRegex, skip, modify} = options;
 
   /** @type {Smokehouse.TestDfn[]} */
@@ -51,6 +51,4 @@ async function runSmokes(options) {
   return runSmokehouse(modifiedTests, smokehouse);
 }
 
-module.exports = {
-  runSmokes,
-};
+module.exports = runFirehouse;
