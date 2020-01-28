@@ -554,6 +554,15 @@
   "lighthouse-core/audits/dobetterweb/appcache-manifest.js | title": {
     "message": "Avoids Application Cache"
   },
+  "lighthouse-core/audits/dobetterweb/charset.js | description": {
+    "message": "My description that I haven't written yet"
+  },
+  "lighthouse-core/audits/dobetterweb/charset.js | failureTitle": {
+    "message": "Charset element is missing or occurs too late on the page"
+  },
+  "lighthouse-core/audits/dobetterweb/charset.js | title": {
+    "message": "Properly defines charset"
+  },
   "lighthouse-core/audits/dobetterweb/doctype.js | description": {
     "message": "Specifying a doctype prevents the browser from switching to quirks-mode. [Learn more](https://web.dev/doctype)."
   },

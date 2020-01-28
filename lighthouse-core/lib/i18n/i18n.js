@@ -297,7 +297,7 @@ function _formatIcuMessage(locale, icuMessageId, uiStringMessage, values = {}) {
   }
   // At this point, there is no reasonable string to show to the user, so throw.
   if (!localeMessage) {
-    throw new Error(_ICUMsgNotFoundMsg);
+    throw new Error(_ICUMsgNotFoundMsg + icuMessageId + uiStringMessage);
   }
 
   // when using accented english, force the use of a different locale for number formatting

@@ -225,6 +225,13 @@
             "scoreDisplayMode": "notApplicable",
             "title": "Document has a valid `rel=canonical`"
         },
+        "charset": {
+            "description": "My description that I haven't written yet",
+            "id": "charset",
+            "score": 1.0,
+            "scoreDisplayMode": "binary",
+            "title": "Properly defines charset"
+        },
         "color-contrast": {
             "description": "Low-contrast text is difficult or impossible for many users to read. [Learn more](https://web.dev/color-contrast/).",
             "details": {
@@ -3668,6 +3675,10 @@
                     "weight": 1.0
                 },
                 {
+                    "id": "charset",
+                    "weight": 1.0
+                },
+                {
                     "id": "no-vulnerable-libraries",
                     "weight": 1.0
                 },
@@ -3697,7 +3708,7 @@
                 }
             ],
             "id": "best-practices",
-            "score": 0.07,
+            "score": 0.13,
             "title": "Best Practices"
         },
         "performance": {
@@ -5144,6 +5155,12 @@
                 "duration": 100.0,
                 "entryType": "measure",
                 "name": "lh:audit:doctype",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
+                "name": "lh:audit:charset",
                 "startTime": 0.0
             },
             {

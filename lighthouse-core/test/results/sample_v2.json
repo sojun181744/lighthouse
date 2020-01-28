@@ -2782,6 +2782,13 @@
       "score": 1,
       "scoreDisplayMode": "binary"
     },
+    "charset": {
+      "id": "charset",
+      "title": "Properly defines charset",
+      "description": "My description that I haven't written yet",
+      "score": 1,
+      "scoreDisplayMode": "binary"
+    },
     "dom-size": {
       "id": "dom-size",
       "title": "Avoids an excessive DOM size",
@@ -4043,6 +4050,10 @@
           "weight": 1
         },
         {
+          "id": "charset",
+          "weight": 1
+        },
+        {
           "id": "no-vulnerable-libraries",
           "weight": 1
         },
@@ -4072,7 +4083,7 @@
         }
       ],
       "id": "best-practices",
-      "score": 0.07
+      "score": 0.13
     },
     "seo": {
       "title": "SEO",
@@ -5225,6 +5236,12 @@
       },
       {
         "startTime": 0,
+        "name": "lh:audit:charset",
+        "duration": 100,
+        "entryType": "measure"
+      },
+      {
+        "startTime": 0,
         "name": "lh:audit:dom-size",
         "duration": 100,
         "entryType": "measure"
@@ -6348,6 +6365,12 @@
       ],
       "lighthouse-core/audits/dobetterweb/doctype.js | description": [
         "audits.doctype.description"
+      ],
+      "lighthouse-core/audits/dobetterweb/charset.js | title": [
+        "audits.charset.title"
+      ],
+      "lighthouse-core/audits/dobetterweb/charset.js | description": [
+        "audits.charset.description"
       ],
       "lighthouse-core/audits/dobetterweb/dom-size.js | title": [
         "audits[dom-size].title"

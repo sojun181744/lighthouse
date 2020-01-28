@@ -554,6 +554,15 @@
   "lighthouse-core/audits/dobetterweb/appcache-manifest.js | title": {
     "message": "Âv́ôíd̂ś Âṕp̂ĺîćât́îón̂ Ćâćĥé"
   },
+  "lighthouse-core/audits/dobetterweb/charset.js | description": {
+    "message": "M̂ý d̂éŝćr̂íp̂t́îón̂ t́ĥát̂ Í ĥáv̂én̂'t́ ŵŕît́t̂én̂ ýêt́"
+  },
+  "lighthouse-core/audits/dobetterweb/charset.js | failureTitle": {
+    "message": "Ĉh́âŕŝét̂ él̂ém̂én̂t́ îś m̂íŝśîńĝ ór̂ óĉćûŕŝ t́ôó l̂át̂é ôń t̂h́ê ṕâǵê"
+  },
+  "lighthouse-core/audits/dobetterweb/charset.js | title": {
+    "message": "P̂ŕôṕêŕl̂ý d̂éf̂ín̂éŝ ćĥár̂śêt́"
+  },
   "lighthouse-core/audits/dobetterweb/doctype.js | description": {
     "message": "Ŝṕêćîf́ŷín̂ǵ â d́ôćt̂ýp̂é p̂ŕêv́êńt̂ś t̂h́ê b́r̂óŵśêŕ f̂ŕôḿ ŝẃît́ĉh́îńĝ t́ô q́ûír̂ḱŝ-ḿôd́ê. [Ĺêár̂ń m̂ór̂é](https://web.dev/doctype)."
   },
