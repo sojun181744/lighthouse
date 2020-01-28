@@ -12,8 +12,10 @@
 
 const Audit = require('../audit.js');
 const i18n = require('../../lib/i18n/i18n.js');
-const URL = require('../../lib/url-shim.js');
 const MainResource = require('../../computed/main-resource.js');
+const CONTENT_TYPE_HEADER = 'content-type';
+const CHARSET_META_REGEX = /<meta.*charset=.*>/gm;
+const CHARSET_HTTP_REGEX = /charset=.*/gm;
 
 const UIStrings = {
   /** Title of a Lighthouse audit that provides detail on if the charset is set properly for a page. This title is shown when the charset is defined correctly. */
@@ -46,13 +48,28 @@ class CharsetDefinedCorrectly extends Audit {
    * @return {Promise<LH.Audit.Product>} 
    */
   static audit(artifacts, context) {
-    const startOfHTMLDoc = artifacts.MainDocumentContent.slice(0,1024);
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     return MainResource.request({devtoolsLog, URL: artifacts.URL}, context)
     .then(mainResource => {
-      const containsCharsetMeta = startOfHTMLDoc.match(/<meta.*charset=.*>/gm);
+      let charsetIsSet = false;
+      // Check the http header 'content-type' to see if charset is defined there
+      if (mainResource.responseHeaders) {
+        const contentTypeHeader = mainResource.responseHeaders
+          .find(header => header.name.toLowerCase() === CONTENT_TYPE_HEADER);
+
+        if (contentTypeHeader)
+          charsetIsSet = contentTypeHeader.value.match(CHARSET_HTTP_REGEX) != null;
+      }
+
+      // Check if there is a BOM byte marker
+      const BOM_FIRSTCHAR = 65279;
+      charsetIsSet = charsetIsSet || artifacts.MainDocumentContent.charCodeAt(0) === BOM_FIRSTCHAR;
+
+      // Check if charset is defined within the first 1024 characters(~1024 bytes) of the HTML document
+      charsetIsSet = charsetIsSet || artifacts.MainDocumentContent.slice(0,1024).match(CHARSET_META_REGEX) != null;
+      
       return {
-        score: Number(containsCharsetMeta != null ? containsCharsetMeta.length > 0 : false),
+        score: Number(charsetIsSet),
       };
     });
   }
