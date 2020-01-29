@@ -28,7 +28,7 @@ const UIStrings = {
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
-class CharsetDefinedCorrectly extends Audit {
+class CharsetDefined extends Audit {
   /**
    * @return {LH.Audit.Meta}
    */
@@ -38,7 +38,7 @@ class CharsetDefinedCorrectly extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['MainDocumentContent','URL', 'devtoolsLogs'],
+      requiredArtifacts: ['MainDocumentContent', 'devtoolsLogs'],
     };
   }
 
@@ -75,5 +75,5 @@ class CharsetDefinedCorrectly extends Audit {
   }
 }
 
-module.exports = CharsetDefinedCorrectly;
+module.exports = CharsetDefined;
 module.exports.UIStrings = UIStrings;

@@ -227,9 +227,10 @@
         },
         "charset": {
             "description": "My description that I haven't written yet",
+            "errorMessage": "Cannot read property 'finalUrl' of undefined",
             "id": "charset",
-            "score": 1.0,
-            "scoreDisplayMode": "binary",
+            "score": null,
+            "scoreDisplayMode": "error",
             "title": "Properly defines charset"
         },
         "color-contrast": {
@@ -3708,7 +3709,7 @@
                 }
             ],
             "id": "best-practices",
-            "score": 0.13,
+            "score": null,
             "title": "Best Practices"
         },
         "performance": {
@@ -5161,6 +5162,12 @@
                 "duration": 100.0,
                 "entryType": "measure",
                 "name": "lh:audit:charset",
+                "startTime": 0.0
+            },
+            {
+                "duration": 100.0,
+                "entryType": "measure",
+                "name": "lh:computed:MainResource",
                 "startTime": 0.0
             },
             {
