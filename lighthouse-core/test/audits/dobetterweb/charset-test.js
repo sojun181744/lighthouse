@@ -135,8 +135,6 @@ describe('Charset defined audit', () => {
     });
   });
 
-
-
   it('passes when the page has charset defined almost too late in the page', () => {
     const finalUrl = 'https://example.com/';
     const mainResource = {
@@ -159,8 +157,7 @@ describe('Charset defined audit', () => {
     });
   });
 
-
-  it('fails when the page has charset only partially defined in the first 1024 bytes of the page', () => {
+  it('fails when charset only partially defined in the first 1024 bytes of the page', () => {
     const finalUrl = 'https://example.com/';
     const mainResource = {
       url: finalUrl,
@@ -185,5 +182,4 @@ describe('Charset defined audit', () => {
       assert.equal(auditResult.score, 0);
     });
   });
-
 });
