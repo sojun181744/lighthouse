@@ -25,7 +25,8 @@ const UIStrings = {
   /** Description of a Lighthouse audit that tells the user why the charset needs to be defined early on. */
   description: 'A character encoding declaration is required whether it is done explicitly ' +
     'in the first 1024 bytes of the page source, through a Byte Order Mark (BOM), ' +
-    'or in the content-type http header.',
+    'or in the content-type HTTP header. ' +
+    '[Learn more](https://www.w3.org/International/questions/qa-html-encoding-declarations).',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);

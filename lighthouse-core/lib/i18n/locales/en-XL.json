@@ -555,7 +555,7 @@
     "message": "Âv́ôíd̂ś Âṕp̂ĺîćât́îón̂ Ćâćĥé"
   },
   "lighthouse-core/audits/dobetterweb/charset.js | description": {
-    "message": "Â ćĥár̂áĉt́êŕ êńĉód̂ín̂ǵ d̂éĉĺâŕât́îón̂ íŝ ŕêq́ûír̂éd̂ ẃĥét̂h́êŕ ît́ îś d̂ón̂é êx́p̂ĺîćît́l̂ý îń t̂h́ê f́îŕŝt́ 1024 b̂ýt̂éŝ óf̂ t́ĥé p̂áĝé ŝóûŕĉé, t̂h́r̂óûǵĥ á B̂ýt̂é Ôŕd̂ér̂ Ḿâŕk̂ (B́ÔḾ), ôŕ îń t̂h́ê ćôńt̂én̂t́-t̂ýp̂é ĥt́t̂ṕ ĥéâd́êŕ."
+    "message": "Â ćĥár̂áĉt́êŕ êńĉód̂ín̂ǵ d̂éĉĺâŕât́îón̂ íŝ ŕêq́ûír̂éd̂ ẃĥét̂h́êŕ ît́ îś d̂ón̂é êx́p̂ĺîćît́l̂ý îń t̂h́ê f́îŕŝt́ 1024 b̂ýt̂éŝ óf̂ t́ĥé p̂áĝé ŝóûŕĉé, t̂h́r̂óûǵĥ á B̂ýt̂é Ôŕd̂ér̂ Ḿâŕk̂ (B́ÔḾ), ôŕ îń t̂h́ê ćôńt̂én̂t́-t̂ýp̂é ĤT́T̂Ṕ ĥéâd́êŕ. [L̂éâŕn̂ ḿôŕê](https://www.w3.org/International/questions/qa-html-encoding-declarations)."
   },
   "lighthouse-core/audits/dobetterweb/charset.js | failureTitle": {
     "message": "Ĉh́âŕŝét̂ él̂ém̂én̂t́ îś m̂íŝśîńĝ ór̂ óĉćûŕŝ t́ôó l̂át̂é ôń t̂h́ê ṕâǵê"
