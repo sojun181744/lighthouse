@@ -14,8 +14,8 @@ const Audit = require('../audit.js');
 const i18n = require('../../lib/i18n/i18n.js');
 const MainResource = require('../../computed/main-resource.js');
 const CONTENT_TYPE_HEADER = 'content-type';
-const CHARSET_META_REGEX = /<meta.*charset=.*>/gm;
-const CHARSET_HTTP_REGEX = /charset=.*/gm;
+const CHARSET_META_REGEX = /<meta.*charset="?.{1,}"?.*>/gm;
+const CHARSET_HTTP_REGEX = /charset=.{1,}/gm;
 
 const UIStrings = {
   /** Title of a Lighthouse audit that provides detail on if the charset is set properly for a page. This title is shown when the charset is defined correctly. */
