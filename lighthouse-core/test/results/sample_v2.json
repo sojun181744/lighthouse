@@ -2785,10 +2785,9 @@
     "charset": {
       "id": "charset",
       "title": "Properly defines charset",
-      "description": "My description that I haven't written yet",
-      "score": null,
-      "scoreDisplayMode": "error",
-      "errorMessage": "Cannot read property 'finalUrl' of undefined"
+      "description": "A character encoding declaration is required whether it is done explicitly in the first 1024 bytes of the page source, through a Byte Order Mark (BOM), or in the content-type http header.",
+      "score": 1,
+      "scoreDisplayMode": "binary"
     },
     "dom-size": {
       "id": "dom-size",
@@ -4084,7 +4083,7 @@
         }
       ],
       "id": "best-practices",
-      "score": null
+      "score": 0.13
     },
     "seo": {
       "title": "SEO",
@@ -5238,12 +5237,6 @@
       {
         "startTime": 0,
         "name": "lh:audit:charset",
-        "duration": 100,
-        "entryType": "measure"
-      },
-      {
-        "startTime": 0,
-        "name": "lh:computed:MainResource",
         "duration": 100,
         "entryType": "measure"
       },

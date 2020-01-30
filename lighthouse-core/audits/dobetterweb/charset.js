@@ -5,7 +5,7 @@
  */
 
 /**
- * @fileoverview Audits a page to ensure charset it configured properly. 
+ * @fileoverview Audits a page to ensure charset it configured properly.
  * It must be defined within the first 1024 bytes of the HTML document, defined in the HTTP header, or in a BOM.
  */
 'use strict';
@@ -23,7 +23,9 @@ const UIStrings = {
   /** Title of a Lighthouse audit that provides detail on if the charset is set properly for a page. This title is shown when the charset meta tag is missing or defined too late in the page. */
   failureTitle: 'Charset element is missing or occurs too late on the page',
   /** Description of a Lighthouse audit that tells the user why the charset needs to be defined early on. */
-  description: 'My description that I haven\'t written yet',
+  description: 'A character encoding declaration is required whether it is done explicitly ' +
+    'in the first 1024 bytes of the page source, through a Byte Order Mark (BOM), ' +
+    'or in the content-type http header.',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -38,14 +40,14 @@ class CharsetDefined extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['MainDocumentContent', 'devtoolsLogs'],
+      requiredArtifacts: ['MainDocumentContent', 'URL', 'devtoolsLogs'],
     };
   }
 
   /**
    * @param {LH.Artifacts} artifacts
    * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Audit.Product>} 
+   * @return {Promise<LH.Audit.Product>}
    */
   static audit(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
@@ -57,8 +59,9 @@ class CharsetDefined extends Audit {
         const contentTypeHeader = mainResource.responseHeaders
           .find(header => header.name.toLowerCase() === CONTENT_TYPE_HEADER);
 
-        if (contentTypeHeader)
-          charsetIsSet = contentTypeHeader.value.match(CHARSET_HTTP_REGEX) != null;
+        if (contentTypeHeader) {
+          charsetIsSet = contentTypeHeader.value.match(CHARSET_HTTP_REGEX) !== null;
+        }
       }
 
       // Check if there is a BOM byte marker
@@ -66,8 +69,9 @@ class CharsetDefined extends Audit {
       charsetIsSet = charsetIsSet || artifacts.MainDocumentContent.charCodeAt(0) === BOM_FIRSTCHAR;
 
       // Check if charset is defined within the first 1024 characters(~1024 bytes) of the HTML document
-      charsetIsSet = charsetIsSet || artifacts.MainDocumentContent.slice(0,1024).match(CHARSET_META_REGEX) != null;
-      
+      charsetIsSet = charsetIsSet ||
+        artifacts.MainDocumentContent.slice(0, 1024).match(CHARSET_META_REGEX) !== null;
+
       return {
         score: Number(charsetIsSet),
       };

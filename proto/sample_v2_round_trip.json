@@ -226,11 +226,10 @@
             "title": "Document has a valid `rel=canonical`"
         },
         "charset": {
-            "description": "My description that I haven't written yet",
-            "errorMessage": "Cannot read property 'finalUrl' of undefined",
+            "description": "A character encoding declaration is required whether it is done explicitly in the first 1024 bytes of the page source, through a Byte Order Mark (BOM), or in the content-type http header.",
             "id": "charset",
-            "score": null,
-            "scoreDisplayMode": "error",
+            "score": 1.0,
+            "scoreDisplayMode": "binary",
             "title": "Properly defines charset"
         },
         "color-contrast": {
@@ -3709,7 +3708,7 @@
                 }
             ],
             "id": "best-practices",
-            "score": null,
+            "score": 0.13,
             "title": "Best Practices"
         },
         "performance": {
@@ -5162,12 +5161,6 @@
                 "duration": 100.0,
                 "entryType": "measure",
                 "name": "lh:audit:charset",
-                "startTime": 0.0
-            },
-            {
-                "duration": 100.0,
-                "entryType": "measure",
-                "name": "lh:computed:MainResource",
                 "startTime": 0.0
             },
             {

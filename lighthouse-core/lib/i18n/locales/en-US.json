@@ -555,7 +555,7 @@
     "message": "Avoids Application Cache"
   },
   "lighthouse-core/audits/dobetterweb/charset.js | description": {
-    "message": "My description that I haven't written yet"
+    "message": "A character encoding declaration is required whether it is done explicitly in the first 1024 bytes of the page source, through a Byte Order Mark (BOM), or in the content-type http header."
   },
   "lighthouse-core/audits/dobetterweb/charset.js | failureTitle": {
     "message": "Charset element is missing or occurs too late on the page"

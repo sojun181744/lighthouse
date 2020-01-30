@@ -13,18 +13,132 @@ const networkRecordsToDevtoolsLog = require('../../network-records-to-devtools-l
 
 describe('Charset defined audit', () => {
   it('succeeds when the page contains the charset meta tag', () => {
+    const finalUrl = 'https://example.com/';
     const mainResource = {
+      url: finalUrl,
       responseHeaders: [],
     };
     const devtoolsLog = networkRecordsToDevtoolsLog([mainResource]);
     const artifacts = {
-      devtoolsLog: {[CharsetDefinedAudit.DEFAULT_PASS]: devtoolsLog},
-      MainDocumentContent: '<html><meta charset="utf-8" /></html>'
+      devtoolsLogs: {[CharsetDefinedAudit.DEFAULT_PASS]: devtoolsLog},
+      URL: {finalUrl},
+      MainDocumentContent: '<meta charset="utf-8" />',
     };
 
     const context = {computedCache: new Map()};
     return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
       assert.equal(auditResult.score, 1);
+    });
+  });
+
+  it('succeeds when the page has the charset defined in the content-type meta tag', () => {
+    const finalUrl = 'https://example.com/';
+    const mainResource = {
+      url: finalUrl,
+      responseHeaders: [],
+    };
+    const devtoolsLog = networkRecordsToDevtoolsLog([mainResource]);
+    const artifacts = {
+      devtoolsLogs: {[CharsetDefinedAudit.DEFAULT_PASS]: devtoolsLog},
+      URL: {finalUrl},
+      MainDocumentContent: '<meta http-equiv="Content-type" content="text/html; charset=utf-8" />',
+    };
+
+    const context = {computedCache: new Map()};
+    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
+      assert.equal(auditResult.score, 1);
+    });
+  });
+
+  it('succeeds when the page has the charset defined in the content-type http header', () => {
+    const finalUrl = 'https://example.com/';
+    const mainResource = {
+      url: finalUrl,
+      responseHeaders: [
+        {name: 'content-type', value: 'text/html; charset=UTF-8'},
+      ],
+    };
+    const devtoolsLog = networkRecordsToDevtoolsLog([mainResource]);
+    const artifacts = {
+      devtoolsLogs: {[CharsetDefinedAudit.DEFAULT_PASS]: devtoolsLog},
+      URL: {finalUrl},
+      MainDocumentContent: '<meta http-equiv="Content-type" content="text/html" />',
+    };
+
+    const context = {computedCache: new Map()};
+    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
+      assert.equal(auditResult.score, 1);
+    });
+  });
+
+  it('succeeds when the page has the charset defined via BOM', () => {
+    const finalUrl = 'https://example.com/';
+    const mainResource = {
+      url: finalUrl,
+      responseHeaders: [
+        {name: 'content-type', value: 'text/html'},
+      ],
+    };
+    const devtoolsLog = networkRecordsToDevtoolsLog([mainResource]);
+    const artifacts = {
+      devtoolsLogs: {[CharsetDefinedAudit.DEFAULT_PASS]: devtoolsLog},
+      URL: {finalUrl},
+      MainDocumentContent: '\ufeff<meta http-equiv="Content-type" content="text/html" />',
+    };
+
+    const context = {computedCache: new Map()};
+    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
+      assert.equal(auditResult.score, 1);
+    });
+  });
+
+  it('fails when the page does not have charset defined', () => {
+    const finalUrl = 'https://example.com/';
+    const mainResource = {
+      url: finalUrl,
+      responseHeaders: [
+        {name: 'content-type', value: 'text/html'},
+      ],
+    };
+    const devtoolsLog = networkRecordsToDevtoolsLog([mainResource]);
+    const artifacts = {
+      devtoolsLogs: {[CharsetDefinedAudit.DEFAULT_PASS]: devtoolsLog},
+      URL: {finalUrl},
+      MainDocumentContent: '<meta http-equiv="Content-type" content="text/html" />',
+    };
+
+    const context = {computedCache: new Map()};
+    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
+      assert.equal(auditResult.score, 0);
+    });
+  });
+
+  it('fails when the page has charset defined too late in the page', () => {
+    const finalUrl = 'https://example.com/';
+    const mainResource = {
+      url: finalUrl,
+      responseHeaders: [
+        {name: 'content-type', value: 'text/html'},
+      ],
+    };
+    const extendHTML = function() {
+      const meta = '<meta name="viewport" content="width=device-width, initial-scale=1" />';
+      let retString = '';
+      for (let i = 0; i < 20; i++) {
+        retString += meta;
+      }
+      return retString;
+    };
+    const devtoolsLog = networkRecordsToDevtoolsLog([mainResource]);
+    const artifacts = {
+      devtoolsLogs: {[CharsetDefinedAudit.DEFAULT_PASS]: devtoolsLog},
+      URL: {finalUrl},
+      MainDocumentContent: '<html><head>' + extendHTML() + '<meta charset="utf-8" /></head></html>',
+    };
+
+    const context = {computedCache: new Map()};
+    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
+      assert.equal(auditResult.score, 0);
     });
   });
 });
