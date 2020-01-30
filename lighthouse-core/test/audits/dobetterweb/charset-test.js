@@ -121,19 +121,12 @@ describe('Charset defined audit', () => {
         {name: 'content-type', value: 'text/html'},
       ],
     };
-    const extendHTML = function() {
-      const meta = '<meta name="viewport" content="width=device-width, initial-scale=1" />';
-      let retString = '';
-      for (let i = 0; i < 20; i++) {
-        retString += meta;
-      }
-      return retString;
-    };
+    const bigString = new Array(1024).fill(' ').join('');
     const devtoolsLog = networkRecordsToDevtoolsLog([mainResource]);
     const artifacts = {
       devtoolsLogs: {[CharsetDefinedAudit.DEFAULT_PASS]: devtoolsLog},
       URL: {finalUrl},
-      MainDocumentContent: '<html><head>' + extendHTML() + '<meta charset="utf-8" /></head></html>',
+      MainDocumentContent: '<html><head>' + bigString + '<meta charset="utf-8" />hello',
     };
 
     const context = {computedCache: new Map()};
@@ -141,4 +134,56 @@ describe('Charset defined audit', () => {
       assert.equal(auditResult.score, 0);
     });
   });
+
+
+
+  it('passes when the page has charset defined almost too late in the page', () => {
+    const finalUrl = 'https://example.com/';
+    const mainResource = {
+      url: finalUrl,
+      responseHeaders: [
+        {name: 'content-type', value: 'text/html'},
+      ],
+    };
+    const bigString = new Array(900).fill(' ').join('');
+    const devtoolsLog = networkRecordsToDevtoolsLog([mainResource]);
+    const artifacts = {
+      devtoolsLogs: {[CharsetDefinedAudit.DEFAULT_PASS]: devtoolsLog},
+      URL: {finalUrl},
+      MainDocumentContent: '<html><head>' + bigString + '<meta charset="utf-8" />hello',
+    };
+
+    const context = {computedCache: new Map()};
+    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
+      assert.equal(auditResult.score, 1);
+    });
+  });
+
+
+  it('fails when the page has charset only partially defined in the first 1024 bytes of the page', () => {
+    const finalUrl = 'https://example.com/';
+    const mainResource = {
+      url: finalUrl,
+      responseHeaders: [
+        {name: 'content-type', value: 'text/html'},
+      ],
+    };
+    const prelude = '<html><head>';
+    const charsetHTML = '<meta charset="utf-8" />';
+    // 1024 bytes should be halfway through the meta tag
+    const bigString = new Array(1024 - prelude.length - charsetHTML.length / 2).fill(' ').join('');
+
+    const devtoolsLog = networkRecordsToDevtoolsLog([mainResource]);
+    const artifacts = {
+      devtoolsLogs: {[CharsetDefinedAudit.DEFAULT_PASS]: devtoolsLog},
+      URL: {finalUrl},
+      MainDocumentContent: prelude + bigString + charsetHTML + 'hello',
+    };
+
+    const context = {computedCache: new Map()};
+    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
+      assert.equal(auditResult.score, 0);
+    });
+  });
+
 });
