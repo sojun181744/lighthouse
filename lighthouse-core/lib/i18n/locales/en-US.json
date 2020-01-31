@@ -555,10 +555,10 @@
     "message": "Avoids Application Cache"
   },
   "lighthouse-core/audits/dobetterweb/charset.js | description": {
-    "message": "A character encoding declaration is required whether it is done explicitly in the first 1024 bytes of the page source, through a Byte Order Mark (BOM), or in the content-type HTTP header. [Learn more](https://www.w3.org/International/questions/qa-html-encoding-declarations)."
+    "message": "A character encoding declaration is required. It can be done with a <meta> tagin the first 1024 bytes of the HTML or in the Content-Type HTTP response header. [Learn more](https://www.w3.org/International/questions/qa-html-encoding-declarations)."
   },
   "lighthouse-core/audits/dobetterweb/charset.js | failureTitle": {
-    "message": "Charset element is missing or occurs too late on the page"
+    "message": "Charset declaration is missing or occurs too late in the HTML"
   },
   "lighthouse-core/audits/dobetterweb/charset.js | title": {
     "message": "Properly defines charset"
