@@ -34,14 +34,15 @@ const argv = yargs
     'n': 'Number of times to run',
     // --summarize
     'summarize': 'Prints statistics report',
-    'measure-filter': 'Regex of measures to include. Optional',
+    'filter': 'Regex of measures to include. Optional',
+    'reportExclude': 'Regex of columns keys to exclude.',
     'output': 'table, json',
     // --compare
     'compare': 'Compare two sets of LHRs',
     'delta-property-sort': 'Property to sort by its delta',
     'desc': 'Set to override default ascending sort',
   })
-  .string('measure-filter')
+  .string('filter')
   .default('report-exclude', 'min|max|stdev|^n$')
   .default('delta-property-sort', 'mean')
   .default('output', 'table')
@@ -160,7 +161,7 @@ function aggregateResults(name, resultType = 'timings') {
   // `${url}@@@${entry.name}` -> duration
   /** @type {Map<string, number[]>} */
   const durationsMap = new Map();
-  const measureFilter = argv.measureFilter ? new RegExp(argv.measureFilter, 'i') : null;
+  const includeFilter = argv.filter ? new RegExp(argv.filter, 'i') : null;
 
   for (const lhrPath of glob.sync(`${outputDir}/*.json`)) {
     const lhrJson = fs.readFileSync(lhrPath, 'utf-8');
@@ -177,12 +178,12 @@ function aggregateResults(name, resultType = 'timings') {
         lhr.timing.entries.map(entry => ([entry.name, entry.duration]));
 
     for (const [name, timimg] of entries) {
-      if (measureFilter && !measureFilter.test(name)) {
+      if (includeFilter && !includeFilter.test(String(name))) {
         continue;
       }
 
       const durations = durationsByName[name] = durationsByName[name] || [];
-      durations.push(timimg);
+      durations.push(Number(timimg));
     }
 
     // Push the aggregate time of each unique (by name) entry.
@@ -231,7 +232,7 @@ function filter(results) {
 
   for (const result of results) {
     for (const key in result) {
-      // if (reportExcludeRegex.test(key)) delete result[key];
+      if (reportExcludeRegex.test(key)) delete result[key];
     }
   }
 }
@@ -283,7 +284,7 @@ function compare() {
 
     const mean = compareValues(baseResult && baseResult.mean, otherResult && otherResult.mean);
     const stdev = compareValues(baseResult && baseResult.stdev, otherResult && otherResult.stdev);
-    const cv = compareValues(baseResult && baseResult.cv, otherResult && otherResult.cv);
+    const cv = compareValues(baseResult && baseResult.CV, otherResult && otherResult.CV);
     const min = compareValues(baseResult && baseResult.min, otherResult && otherResult.min);
     const max = compareValues(baseResult && baseResult.max, otherResult && otherResult.max);
 
