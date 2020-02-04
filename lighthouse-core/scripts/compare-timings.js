@@ -174,7 +174,7 @@ function aggregateResults(name, resultType = 'timings') {
 
     const metrics = /** @type {!LH.Audit.Details.Table} */ (lhr.audits.metrics.details).items[0];
     const entries = resultType === 'metrics' ?
-        Object.entries(metrics) :
+        Object.entries(metrics).filter(([name]) => !name.endsWith('Ts')) :
         lhr.timing.entries.map(entry => ([entry.name, entry.duration]));
 
     for (const [name, timimg] of entries) {
