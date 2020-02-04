@@ -28,7 +28,7 @@ function generateArtifacts(htmlContent, contentTypeValue = 'text/html') {
 }
 
 describe('Charset defined audit', () => {
-  it('succeeds when the page contains the charset meta tag', () => {
+  it('succeeds wheharsetDefinedAudit.CHARSET_HTTP_REGEthe page contains the charset meta tag', () => {
     const htmlContent = '<meta charset="utf-8" />';
     const artifacts = generateArtifacts(htmlContent);
     const context = {computedCache: new Map()};
@@ -105,5 +105,22 @@ describe('Charset defined audit', () => {
     return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
       assert.equal(auditResult.score, 0);
     });
+  });
+});
+
+describe('Charset regex check', () => {
+  it('passes if html charset declaration has no quotes', () => {
+    const charsetHTML = '<meta charset=utf-8 />';
+    assert.equal(CharsetDefinedAudit.CHARSET_HTML_REGEX.test(charsetHTML), true);
+  });
+
+  it('passes if html charset declaration tag is left open', () => {
+    const charsetHTML = '<meta charset="utf-8">';
+    assert.equal(CharsetDefinedAudit.CHARSET_HTML_REGEX.test(charsetHTML), true);
+  });
+
+  it('fails if charset declaration has an empty value', () => {
+    const charsetHTTP = 'text/html; chartype=';
+    assert.equal(CharsetDefinedAudit.CHARSET_HTTP_REGEX.test(charsetHTTP), false);
   });
 });

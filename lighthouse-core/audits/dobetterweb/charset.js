@@ -28,7 +28,7 @@ const UIStrings = {
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 const CONTENT_TYPE_HEADER = 'content-type';
-const CHARSET_META_REGEX = /<meta.*charset="?.{1,}"?.*>/gm;
+const CHARSET_HTML_REGEX = /<meta.*charset="?.{1,}"?.*>/gm;
 const CHARSET_HTTP_REGEX = /charset=.{1,}/gm;
 
 class CharsetDefined extends Audit {
@@ -70,7 +70,7 @@ class CharsetDefined extends Audit {
 
     // Check if charset is defined within the first 1024 characters(~1024 bytes) of the HTML document
     charsetIsSet = charsetIsSet ||
-      artifacts.MainDocumentContent.slice(0, 1024).match(CHARSET_META_REGEX) !== null;
+      artifacts.MainDocumentContent.slice(0, 1024).match(CHARSET_HTML_REGEX) !== null;
 
     return {
       score: Number(charsetIsSet),
@@ -80,5 +80,5 @@ class CharsetDefined extends Audit {
 
 module.exports = CharsetDefined;
 module.exports.UIStrings = UIStrings;
-module.exports.CHARSET_META_REGEX = CHARSET_META_REGEX;
+module.exports.CHARSET_HTML_REGEX = CHARSET_HTML_REGEX;
 module.exports.CHARSET_HTTP_REGEX = CHARSET_HTTP_REGEX;
