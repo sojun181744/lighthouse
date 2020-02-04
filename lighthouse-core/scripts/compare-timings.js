@@ -238,7 +238,7 @@ function filter(results) {
 }
 
 /**
- * @param {number=} value
+ * @param {number|string|undefined} value
  * @return {value is number}
  */
 function exists(value) {
@@ -254,8 +254,8 @@ function summarize() {
 }
 
 /**
- * @param {number=} base
- * @param {number=} other
+ * @param {number|string|undefined} base
+ * @param {number|string|undefined} other
  */
 function compareValues(base, other) {
   const basePart = exists(base) ? base : 'N/A';
