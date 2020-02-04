@@ -206,7 +206,7 @@ function aggregateResults(name, resultType = 'timings') {
     const stdev = sampleStdev(durations);
     return {
       key,
-      metric: entryName,
+      name: entryName,
       url,
       n: durations.length,
       mean: round(mean),
@@ -218,7 +218,7 @@ function aggregateResults(name, resultType = 'timings') {
     };
   }).sort((a, b) => {
     // sort by {measure, url}
-    const measureComp = a.metric.localeCompare(b.metric);
+    const measureComp = a.name.localeCompare(b.name);
     if (measureComp !== 0) return measureComp;
     return a.url.localeCompare(b.url);
   });
@@ -289,7 +289,7 @@ function compare() {
     const max = compareValues(baseResult && baseResult.max, otherResult && otherResult.max);
 
     return {
-      'measure': someResult.metric,
+      'measure': someResult.name,
       'url': someResult.url,
       'mean': mean.description,
       'mean Δ': exists(mean.delta) ? round(mean.delta) : undefined,
