@@ -210,7 +210,8 @@ function aggregateResults(name, resultType = 'timings') {
       n: durations.length,
       mean: round(mean),
       stdev: round(stdev),
-      cv: (stdev / mean).toFixed(3),
+      // https://en.wikipedia.org/wiki/Coefficient_of_variation
+      CV: `${(stdev / mean * 100).toLocaleString()}%`,
       min: round(min),
       max: round(max),
     };
