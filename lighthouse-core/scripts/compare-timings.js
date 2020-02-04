@@ -152,8 +152,9 @@ function audit() {
 
 /**
  * @param {string} name
+ * @param {string} resultType
  */
-function aggregateResults(name) {
+function aggregateResults(name, resultType = 'timings') {
   const outputDir = dir(name);
 
   // `${url}@@@${entry.name}` -> duration
@@ -169,7 +170,13 @@ function aggregateResults(name) {
     // Group the durations of each entry of the same name.
     /** @type {Record<string, number[]>} */
     const durationsByName = {};
-    for (const [name, timimg] of Object.entries(lhr.audits.metrics.details.items[0])) {
+
+    const metrics = /** @type {!LH.Audit.Details.Table} */ (lhr.audits.metrics.details).items[0];
+    const entries = resultType === 'metrics' ?
+        Object.entries(metrics) :
+        lhr.timing.entries.map(entry => ([entry.name, entry.duration]));
+
+    for (const [name, timimg] of entries) {
       if (measureFilter && !measureFilter.test(name)) {
         continue;
       }
@@ -237,9 +244,11 @@ function exists(value) {
 }
 
 function summarize() {
-  const results = aggregateResults(argv.name);
-  filter(results);
-  print(results);
+  for (const resultType of ['timings', 'metrics']) { 
+    const results = aggregateResults(argv.name, resultType);
+    filter(results);
+    print(results);
+  }
 }
 
 /**
