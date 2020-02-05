@@ -233,6 +233,7 @@
       "score": 0.59,
       "scoreDisplayMode": "numeric",
       "numericValue": 0.42,
+      "numericUnit": "shiftarinos",
       "displayValue": "0.42",
       "details": {
         "type": "debugdata",

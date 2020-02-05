@@ -71,6 +71,7 @@ class CumulativeLayoutShift extends Audit {
         context.options.scoreMedian
       ),
       numericValue: metricResult.value,
+      numericUnit: 'shiftarinos',
       displayValue: metricResult.value.toLocaleString(context.settings.locale),
       details,
     };
