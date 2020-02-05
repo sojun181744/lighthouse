@@ -99,13 +99,36 @@ describe('Charset defined audit', () => {
 });
 
 describe('Charset regex check', () => {
-  it('passes if html charset declaration has no quotes', () => {
-    const charsetHTML = '<meta charset=utf-8 />';
-    assert.equal(CharsetDefinedAudit.CHARSET_HTML_REGEX.test(charsetHTML), true);
+  const HTML_REGEX = CharsetDefinedAudit.CHARSET_HTML_REGEX;
+
+  it('handles html correctly', () => {
+    assert.equal(HTML_REGEX.test('<meta charset=utf-8 />'), true);
+    assert.equal(HTML_REGEX.test(`<!doctype html><meta charset=utf-8 /><body>`), true);
+    assert.equal(HTML_REGEX.test(`<!doctype html><meta charset= /><body>`), false);
+    assert.equal(HTML_REGEX.test(`<!doctype html><meta description=hello><body>`), false);
+    assert.equal(HTML_REGEX.test(`<!doctype html><meta   charset=utf-8  /><body>`), true);
+    assert.equal(HTML_REGEX.test(`<!doctype html><meta charset=utf-8><body>`), true);
+    assert.equal(HTML_REGEX.test(`<!doctype html><meta charset=UTF-8><body>`), true);
+    assert.equal(HTML_REGEX.test(`<!doctype html><meta charset=""/><body>`), false);
+    assert.equal(HTML_REGEX.test(
+      `<!doctype html><meta http-equiv="Content-type" content="text/html; charset=utf-8"/><body>'`),
+      true);
+    assert.equal(HTML_REGEX.test(
+      `<!doctype html><meta http-equiv="Content-type" content="text/html; nope-tf8" /><body>'`),
+      false);
+    assert.equal(HTML_REGEX.test(
+      `<!doctype html><meta http-equiv="Content-type" content="text/html; charset=utf-8" <body>'`),
+      false);
+    assert.equal(HTML_REGEX.test(
+      `<!doctype html><meta content="text/html; charset=utf-8" http-equiv="Content-type"/><body>'`),
+      true);
   });
 
-  it('fails if charset declaration has an empty value', () => {
-    const charsetHTTP = 'text/html; chartype=';
-    assert.equal(CharsetDefinedAudit.CHARSET_HTTP_REGEX.test(charsetHTTP), false);
+  it('handles http header correctly', () => {
+    assert.equal(CharsetDefinedAudit.CHARSET_HTTP_REGEX.test('text/html; charset=UTF-8'), true);
+    assert.equal(CharsetDefinedAudit.CHARSET_HTTP_REGEX.test('text/html; charset='), false);
+    assert.equal(CharsetDefinedAudit.CHARSET_HTTP_REGEX.test('text/html; charset = UTF-8'), true);
+    assert.equal(CharsetDefinedAudit.CHARSET_HTTP_REGEX.test('text/html; charset=x'), false);
+    assert.equal(CharsetDefinedAudit.CHARSET_HTTP_REGEX.test('text/html; charset=  '), false);
   });
 });

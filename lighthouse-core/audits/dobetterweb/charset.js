@@ -32,8 +32,9 @@ const UIStrings = {
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 const CONTENT_TYPE_HEADER = 'content-type';
-const CHARSET_HTML_REGEX = /<meta.*charset="?.{1,}"?.*>/gm;
-const CHARSET_HTTP_REGEX = /charset=.{1,}/gm;
+// /^[a-zA-Z0-9-_:.()]{2,}$/ matches all known IANA charset names
+const CHARSET_HTML_REGEX = /<meta[^>]+charset\s*=\s*["']?[a-zA-Z0-9-_:.()]{2,}["']?[^<]*\/?>/;
+const CHARSET_HTTP_REGEX = /charset\s*=\s*[a-zA-Z0-9-_:.()]{2,}/;
 
 class CharsetDefined extends Audit {
   /**
