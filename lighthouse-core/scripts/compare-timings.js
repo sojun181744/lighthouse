@@ -40,7 +40,7 @@ const argv = yargs
     'audit': 'Audits from the artifacts on disk',
     // --summarize
     'summarize': 'Prints statistics report',
-    'filter': 'Regex of measures to include. Optional',
+    'filter': 'Regex inclusion filter applied to key. Optional',
     'reportExclude': 'Regex of columns keys to exclude.',
     'output': 'table, json',
     // --compare
@@ -208,7 +208,7 @@ function aggregateResults(name, resultType = 'timings') {
 
       // Push the aggregate time of each unique (by name) entry.
       for (const [name, durationsForSingleRun] of Object.entries(durationsByName)) {
-        const key = `${lhr.requestedUrl}##${kind}@@@${name}`;
+        const key = `${lhr.requestedUrl}@@@${kind}@@@${name}`;
         let durations = durationsMap.get(key);
         if (!durations) {
           durations = [];
@@ -220,7 +220,7 @@ function aggregateResults(name, resultType = 'timings') {
   }
 
   return [...durationsMap].map(([key, durations]) => {
-    const [url, entryName] = key.split('@@@');
+    const [url, _, entryName] = key.split('@@@');
     const mean = average(durations);
     const min = Math.min(...durations);
     const max = Math.max(...durations);
@@ -312,18 +312,18 @@ function compare() {
     const max = compareValues(baseResult && baseResult.max, otherResult && otherResult.max);
 
     return {
-      'measure': someResult.name,
+      'name': someResult.name,
       'url': someResult.url,
       'mean': mean.description,
-      'mean Δ': exists(mean.delta) ? round(mean.delta) : undefined,
+      'mean Δ': isNumber(mean.delta) ? round(mean.delta) : undefined,
       'stdev': stdev.description,
-      'stdev Δ': exists(stdev.delta) ? round(stdev.delta) : undefined,
+      'stdev Δ': isNumber(stdev.delta) ? round(stdev.delta) : undefined,
       'cv': cv.description,
-      'cv Δ': exists(cv.delta) ? round(cv.delta) : undefined,
+      'cv Δ': isNumber(cv.delta) ? round(cv.delta) : undefined,
       'min': min.description,
-      'min Δ': exists(min.delta) ? round(min.delta) : undefined,
+      'min Δ': isNumber(min.delta) ? round(min.delta) : undefined,
       'max': max.description,
-      'max Δ': exists(max.delta) ? round(max.delta) : undefined,
+      'max Δ': isNumber(max.delta) ? round(max.delta) : undefined,
     };
   });
 
@@ -335,8 +335,8 @@ function compare() {
     const bValue = b[sortByKey];
 
     // Always put the keys missing a result at the bottom of the table.
-    if (!exists(aValue)) return 1;
-    else if (!exists(bValue)) return -1;
+    if (!isNumber(aValue)) return 1;
+    else if (!isNumber(bValue)) return -1;
 
     return (argv.desc ? 1 : -1) * (Math.abs(aValue) - Math.abs(bValue));
   });
