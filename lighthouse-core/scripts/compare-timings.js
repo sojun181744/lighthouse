@@ -184,7 +184,6 @@ function aggregateResults(name, resultType = 'timings') {
   // `${url}@@@${entry.name}` -> duration
   /** @type {Map<string, number[]>} */
   const durationsMap = new Map();
-  const includeFilter = argv.filter ? new RegExp(argv.filter, 'i') : null;
 
   for (const lhrPath of glob.sync(`${outputDir}/*.json`)) {
     const lhrJson = fs.readFileSync(lhrPath, 'utf-8');
@@ -250,13 +249,17 @@ function aggregateResults(name, resultType = 'timings') {
  * @param {*[]} results
  */
 function filter(results) {
-  if (!reportExcludeRegex) return;
+  const includeFilter = argv.filter ? new RegExp(argv.filter, 'i') : null;
 
-  for (const result of results) {
-    for (const key in result) {
-      if (reportExcludeRegex.test(key)) delete result[key];
+  results.forEach((result, i) => {
+    for (const propName of Object.keys(result)) {
+      if (reportExcludeRegex && reportExcludeRegex.test(propName)) delete result[propName];
     }
-  }
+
+    if (includeFilter && !includeFilter.test(result.key)) {
+      delete results[i];
+    }
+  });
 }
 
 /**
