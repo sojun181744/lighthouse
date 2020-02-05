@@ -11,6 +11,9 @@ const networkRecordsToDevtoolsLog = require('../../network-records-to-devtools-l
 
 /* eslint-env jest */
 
+const HTML_PRE = '<!doctype html><head>';
+const HTML_POST = '</head><body><h1>hello';
+
 function generateArtifacts(htmlContent, contentTypeValue = 'text/html') {
   const finalUrl = 'https://example.com/';
   const mainResource = {
@@ -20,102 +23,84 @@ function generateArtifacts(htmlContent, contentTypeValue = 'text/html') {
     ],
   };
   const devtoolsLog = networkRecordsToDevtoolsLog([mainResource]);
-  return {
+  const context = {computedCache: new Map()};
+  return [{
     devtoolsLogs: {[CharsetDefinedAudit.DEFAULT_PASS]: devtoolsLog},
     URL: {finalUrl},
     MainDocumentContent: htmlContent,
-  };
+  }, context];
 }
 
 describe('Charset defined audit', () => {
-  it('succeeds where the page contains the charset meta tag', () => {
-    const htmlContent = '<meta charset="utf-8" />';
-    const artifacts = generateArtifacts(htmlContent);
-    const context = {computedCache: new Map()};
-    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
-      assert.equal(auditResult.score, 1);
-    });
+  it('succeeds where the page contains the charset meta tag', async () => {
+    const htmlContent = HTML_PRE + '<meta charset="utf-8" >' + HTML_POST;
+    const [artifacts, context] = generateArtifacts(htmlContent);
+    const auditResult = await CharsetDefinedAudit.audit(artifacts, context);
+    assert.equal(auditResult.score, 1);
   });
 
-  it('succeeds when the page has the charset defined in the content-type meta tag', () => {
-    const htmlContent = '<meta http-equiv="Content-type" content="text/html; charset=utf-8" />';
-    const artifacts = generateArtifacts(htmlContent);
-    const context = {computedCache: new Map()};
-    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
-      assert.equal(auditResult.score, 1);
-    });
+  it('succeeds when the page has the charset defined in the content-type meta tag', async () => {
+    const htmlContent = HTML_PRE +
+      '<meta http-equiv="Content-type" content="text/html; charset=utf-8" />' + HTML_POST;
+    const [artifacts, context] = generateArtifacts(htmlContent);
+    const auditResult = await CharsetDefinedAudit.audit(artifacts, context);
+    assert.equal(auditResult.score, 1);
   });
 
-  it('succeeds when the page has the charset defined in the content-type http header', () => {
-    const htmlContent = '<meta http-equiv="Content-type" content="text/html" />';
+  it('succeeds when the page has the charset defined in the content-type http header', async () => {
+    const htmlContent = HTML_PRE +
+      '<meta http-equiv="Content-type" content="text/html" />' + HTML_POST;
     const contentTypeVal = 'text/html; charset=UTF-8';
-    const artifacts = generateArtifacts(htmlContent, contentTypeVal);
-    const context = {computedCache: new Map()};
-    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
-      assert.equal(auditResult.score, 1);
-    });
+    const [artifacts, context] = generateArtifacts(htmlContent, contentTypeVal);
+    const auditResult = await CharsetDefinedAudit.audit(artifacts, context);
+    assert.equal(auditResult.score, 1);
   });
 
-  it('succeeds when the page has the charset defined via BOM', () => {
-    const htmlContent = '\ufeff<meta http-equiv="Content-type" content="text/html" />';
-    const artifacts = generateArtifacts(htmlContent);
-    const context = {computedCache: new Map()};
-    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
-      assert.equal(auditResult.score, 1);
-    });
+  it('succeeds when the page has the charset defined via BOM', async () => {
+    const htmlContent = '\ufeff' + HTML_PRE +
+      '<meta http-equiv="Content-type" content="text/html" />' + HTML_POST;
+    const [artifacts, context] = generateArtifacts(htmlContent);
+    const auditResult = await CharsetDefinedAudit.audit(artifacts, context);
+    assert.equal(auditResult.score, 1);
   });
 
-  it('fails when the page does not have charset defined', () => {
-    const htmlContent = '<meta http-equiv="Content-type" content="text/html" />';
-    const artifacts = generateArtifacts(htmlContent);
-    const context = {computedCache: new Map()};
-    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
-      assert.equal(auditResult.score, 0);
-    });
+  it('fails when the page does not have charset defined', async () => {
+    const htmlContent = HTML_PRE + '<meta http-equiv="Content-type" content="text/html" />';
+    const [artifacts, context] = generateArtifacts(htmlContent);
+    const auditResult = await CharsetDefinedAudit.audit(artifacts, context);
+    assert.equal(auditResult.score, 0);
   });
 
-  it('fails when the page has charset defined too late in the page', () => {
+  it('fails when the page has charset defined too late in the page', async () => {
     const bigString = new Array(1024).fill(' ').join('');
-    const htmlContent = '<html><head>' + bigString + '<meta charset="utf-8" /></head></html>';
-    const artifacts = generateArtifacts(htmlContent);
-    const context = {computedCache: new Map()};
-    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
-      assert.equal(auditResult.score, 0);
-    });
+    const htmlContent = HTML_PRE + bigString + '<meta charset="utf-8" />' + HTML_POST;
+    const [artifacts, context] = generateArtifacts(htmlContent);
+    const auditResult = await CharsetDefinedAudit.audit(artifacts, context);
+    assert.equal(auditResult.score, 0);
   });
 
-  it('passes when the page has charset defined almost too late in the page', () => {
+  it('passes when the page has charset defined almost too late in the page', async () => {
     const bigString = new Array(900).fill(' ').join('');
-    const htmlContent = '<html><head>' + bigString + '<meta charset="utf-8" /></head></html>';
-    const artifacts = generateArtifacts(htmlContent);
-    const context = {computedCache: new Map()};
-    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
-      assert.equal(auditResult.score, 1);
-    });
+    const htmlContent = HTML_PRE + bigString + '<meta charset="utf-8" />' + HTML_POST;
+    const [artifacts, context] = generateArtifacts(htmlContent);
+    const auditResult = await CharsetDefinedAudit.audit(artifacts, context);
+    assert.equal(auditResult.score, 1);
   });
 
-  it('fails when charset only partially defined in the first 1024 bytes of the page', () => {
-    const prelude = '<html><head>';
+  it('fails when charset only partially defined in the first 1024 bytes of the page', async () => {
     const charsetHTML = '<meta charset="utf-8" />';
     // 1024 bytes should be halfway through the meta tag
-    const bigString = new Array(1024 - prelude.length - charsetHTML.length / 2).fill(' ').join('');
-    const htmlContent = prelude + bigString + charsetHTML + '</head></html>';
-    const artifacts = generateArtifacts(htmlContent);
-    const context = {computedCache: new Map()};
-    return CharsetDefinedAudit.audit(artifacts, context).then(auditResult => {
-      assert.equal(auditResult.score, 0);
-    });
+    const bigString = new Array(1024 - HTML_PRE.length - charsetHTML.length / 2).fill(' ').join('');
+    const htmlContent = HTML_PRE + bigString + charsetHTML + HTML_POST;
+    const [artifacts, context] = generateArtifacts(htmlContent);
+    const auditResult = await CharsetDefinedAudit.audit(artifacts, context);
+    assert.equal(auditResult.score, 0);
   });
 });
 
 describe('Charset regex check', () => {
   it('passes if html charset declaration has no quotes', () => {
     const charsetHTML = '<meta charset=utf-8 />';
-    assert.equal(CharsetDefinedAudit.CHARSET_HTML_REGEX.test(charsetHTML), true);
-  });
-
-  it('passes if html charset declaration tag is left open', () => {
-    const charsetHTML = '<meta charset="utf-8">';
     assert.equal(CharsetDefinedAudit.CHARSET_HTML_REGEX.test(charsetHTML), true);
   });
 

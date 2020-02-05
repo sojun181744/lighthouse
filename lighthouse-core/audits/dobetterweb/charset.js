@@ -53,27 +53,27 @@ class CharsetDefined extends Audit {
   static async audit(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const mainResource = await MainResource.request({devtoolsLog, URL: artifacts.URL}, context);
-    let charsetIsSet = false;
+    let isCharsetSet = false;
     // Check the http header 'content-type' to see if charset is defined there
     if (mainResource.responseHeaders) {
       const contentTypeHeader = mainResource.responseHeaders
         .find(header => header.name.toLowerCase() === CONTENT_TYPE_HEADER);
 
       if (contentTypeHeader) {
-        charsetIsSet = contentTypeHeader.value.match(CHARSET_HTTP_REGEX) !== null;
+        isCharsetSet = contentTypeHeader.value.match(CHARSET_HTTP_REGEX) !== null;
       }
     }
 
     // Check if there is a BOM byte marker
     const BOM_FIRSTCHAR = 65279;
-    charsetIsSet = charsetIsSet || artifacts.MainDocumentContent.charCodeAt(0) === BOM_FIRSTCHAR;
+    isCharsetSet = isCharsetSet || artifacts.MainDocumentContent.charCodeAt(0) === BOM_FIRSTCHAR;
 
     // Check if charset is defined within the first 1024 characters(~1024 bytes) of the HTML document
-    charsetIsSet = charsetIsSet ||
+    isCharsetSet = isCharsetSet ||
       artifacts.MainDocumentContent.slice(0, 1024).match(CHARSET_HTML_REGEX) !== null;
 
     return {
-      score: Number(charsetIsSet),
+      score: Number(isCharsetSet),
     };
   }
 }
