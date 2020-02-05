@@ -10,6 +10,9 @@
 //     node lighthouse-core/scripts/compare-timings.js --name my-collection --summarize --measure-filter 'loadPage|connect'
 //     node lighthouse-core/scripts/compare-timings.js --name base --name pr --compare
 
+// The script will report both timings and perf metric results. View just one of them but using --filter:
+//     node lighthouse-core/scripts/compare-timings.js --summarize --name pr --filter=metric
+
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const glob = require('glob');
@@ -188,34 +191,33 @@ function aggregateResults(name, resultType = 'timings') {
     /** @type {LH.Result} */
     const lhr = JSON.parse(lhrJson);
 
-    // Group the durations of each entry of the same name.
-    /** @type {Record<string, number[]>} */
-    const durationsByName = {};
-
     const metrics = /** @type {!LH.Audit.Details.Table} */ (lhr.audits.metrics.details).items[0];
-    const entries = resultType === 'metrics' ?
-        Object.entries(metrics).filter(([name]) => !name.endsWith('Ts')) :
-        lhr.timing.entries.map(entry => ([entry.name, entry.duration]));
+    const allEntries = {
+      metric: Object.entries(metrics).filter(([name]) => !name.endsWith('Ts')),
+      timing: lhr.timing.entries.map(entry => ([entry.name, entry.duration])),
+    };
 
-    for (const [name, timimg] of entries) {
-      if (includeFilter && !includeFilter.test(String(name))) {
-        continue;
+    Object.entries(allEntries).forEach(([kind, entries]) => {
+      // Group the durations of each entry of the same name.
+      /** @type {Record<string, number[]>} */
+      const durationsByName = {};
+
+      for (const [name, duration] of entries) {
+        const durations = durationsByName[name] = durationsByName[name] || [];
+        durations.push(Number(duration));
       }
 
-      const durations = durationsByName[name] = durationsByName[name] || [];
-      durations.push(Number(timimg));
-    }
-
-    // Push the aggregate time of each unique (by name) entry.
-    for (const [name, durationsForSingleRun] of Object.entries(durationsByName)) {
-      const key = `${lhr.requestedUrl}@@@${name}`;
-      let durations = durationsMap.get(key);
-      if (!durations) {
-        durations = [];
-        durationsMap.set(key, durations);
+      // Push the aggregate time of each unique (by name) entry.
+      for (const [name, durationsForSingleRun] of Object.entries(durationsByName)) {
+        const key = `${lhr.requestedUrl}##${kind}@@@${name}`;
+        let durations = durationsMap.get(key);
+        if (!durations) {
+          durations = [];
+          durationsMap.set(key, durations);
+        }
+        durations.push(sum(durationsForSingleRun));
       }
-      durations.push(sum(durationsForSingleRun));
-    }
+    });
   }
 
   return [...durationsMap].map(([key, durations]) => {
@@ -266,11 +268,9 @@ function isNumber(value) {
 }
 
 function summarize() {
-  for (const resultType of ['timings', 'metrics']) { 
-    const results = aggregateResults(argv.name, resultType);
-    filter(results);
-    print(results);
-  }
+  const results = aggregateResults(argv.name);
+  filter(results);
+  print(results);
 }
 
 /**
