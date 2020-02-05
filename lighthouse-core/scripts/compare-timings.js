@@ -28,13 +28,13 @@ const argv = yargs
     // common flags
     'name': 'Unique identifier, makes the folder for storing LHRs. Not a path',
     'report-exclude': 'Regex of properties to exclude. Set to "none" to disable default',
-    // collection
-    'gather': 'Just gathers',
-    'audit': 'Audits from the artifacts on disk',
     'collect': 'Gathers, audits and saves LHRs to disk',
+    // --gather
+    'gather': 'Just gathers',
     'lh-flags': 'Lighthouse flags',
     'urls': 'Urls to run',
     'n': 'Number of times to run',
+    'audit': 'Audits from the artifacts on disk',
     // --summarize
     'summarize': 'Prints statistics report',
     'filter': 'Regex of measures to include. Optional',
@@ -46,6 +46,7 @@ const argv = yargs
     'desc': 'Set to override default ascending sort',
   })
   .string('filter')
+  .alias({'gather': 'G', 'audit': 'A'})
   .default('report-exclude', 'min|max|stdev|^n$')
   .default('delta-property-sort', 'mean')
   .default('output', 'table')
