@@ -28,7 +28,7 @@ function generateArtifacts(htmlContent, contentTypeValue = 'text/html') {
 }
 
 describe('Charset defined audit', () => {
-  it('succeeds wheharsetDefinedAudit.CHARSET_HTTP_REGEthe page contains the charset meta tag', () => {
+  it('succeeds where the page contains the charset meta tag', () => {
     const htmlContent = '<meta charset="utf-8" />';
     const artifacts = generateArtifacts(htmlContent);
     const context = {computedCache: new Map()};
