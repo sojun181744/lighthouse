@@ -6,7 +6,11 @@
 
 /**
  * @fileoverview Audits a page to ensure charset it configured properly.
- * It must be defined within the first 1024 bytes of the HTML document, defined in the HTTP header, or in a BOM.
+ * It must be defined within the first 1024 bytes of the HTML document, defined in the HTTP header, or the document source starts with a BOM.
+ *
+ * TODO: It doesn't yet validate the encoding is a valid IANA charset name. https://www.iana.org/assignments/character-sets/character-sets.xhtml
+ *
+ * @see: https://github.com/GoogleChrome/lighthouse/issues/10023
  */
 'use strict';
 
@@ -15,7 +19,7 @@ const i18n = require('../../lib/i18n/i18n.js');
 const MainResource = require('../../computed/main-resource.js');
 
 const UIStrings = {
-  /** Title of a Lighthouse audit that provides detail on if the charset is set properly for a page. This title is shown when the charset is defined correctly. */
+  /** Title of a Lighthouse audit that provides detail on if the charset is set properly for a page. This title is shown when the charset is defined correctly. Charset defines the character encoding (eg UTF-8) of the page content. */
   title: 'Properly defines charset',
   /** Title of a Lighthouse audit that provides detail on if the charset is set properly for a page. This title is shown when the charset meta tag is missing or defined too late in the page. */
   failureTitle: 'Charset declaration is missing or occurs too late in the HTML',
