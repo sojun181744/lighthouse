@@ -258,11 +258,11 @@ function filter(results) {
 }
 
 /**
- * @param {number|string|undefined} value
+ * @param {number=} value
  * @return {value is number}
  */
-function exists(value) {
-  return typeof value !== 'undefined';
+function isNumber(value) {
+  return typeof value === 'number';
 }
 
 function summarize() {
@@ -274,15 +274,15 @@ function summarize() {
 }
 
 /**
- * @param {number|string|undefined} base
- * @param {number|string|undefined} other
+ * @param {number=} base
+ * @param {number=} other
  */
 function compareValues(base, other) {
-  const basePart = exists(base) ? base : 'N/A';
-  const otherPart = exists(other) ? other : 'N/A';
+  const basePart = isNumber(base) ? base : 'N/A';
+  const otherPart = isNumber(other) ? other : 'N/A';
   return {
     description: `${basePart} -> ${otherPart}`,
-    delta: exists(base) && exists(other) ? (other - base) : undefined,
+    delta: isNumber(base) && isNumber(other) ? (other - base) : undefined,
   };
 }
 
@@ -304,7 +304,7 @@ function compare() {
 
     const mean = compareValues(baseResult && baseResult.mean, otherResult && otherResult.mean);
     const stdev = compareValues(baseResult && baseResult.stdev, otherResult && otherResult.stdev);
-    const cv = compareValues(baseResult && baseResult.CV, otherResult && otherResult.CV);
+    const cv = compareValues(baseResult && parseFloat(baseResult.CV), otherResult && parseFloat(otherResult.CV));
     const min = compareValues(baseResult && baseResult.min, otherResult && otherResult.min);
     const max = compareValues(baseResult && baseResult.max, otherResult && otherResult.max);
 
