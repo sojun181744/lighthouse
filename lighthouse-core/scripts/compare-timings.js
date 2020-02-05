@@ -13,8 +13,11 @@
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const glob = require('glob');
-const {execSync} = require('child_process');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 const yargs = require('yargs');
+
+const {ProgressLogger} = require('./lantern/collect/common.js');
 
 const LH_ROOT = `${__dirname}/../..`;
 const ROOT_OUTPUT_DIR = `${LH_ROOT}/timings-data`;
@@ -103,20 +106,32 @@ function round(value) {
   return Math.round(value * 10) / 10;
 }
 
-function gather() {
+/**
+ * Get box-drawing progress bar
+ * @param {number} i 
+ * @param {number} total 
+ * @return {string}
+ */
+function getProgressBar(i, total = argv.n * argv.urls.length) {
+  return new Array(Math.round(i * 40 / total)).fill('▄').join('').padEnd(40);
+}
+
+async function gather() {
   const outputDir = dir(argv.name);
   mkdirp.sync(ROOT_OUTPUT_DIR);
   // Don't overwrite a previous collection
   if (fs.existsSync(outputDir)) throw new Error(`folder already exists: ${outputDir}`);
   fs.mkdirSync(outputDir);
 
+  const progress = new ProgressLogger();
+  progress.log('Gathering…');
+
   for (const url of argv.urls) {
     for (let i = 0; i < argv.n; i++) {
       const gatherDir = `${outputDir}/${urlToFolder(url)}/${i}/`;
       mkdirp.sync(gatherDir);
-      // TODO include multiple urls too.
-      const progressBar = new Array(Math.round(i * 40/ argv.n)).fill('▄').join('').padEnd(40);
-      console.log(`Gathering:   `, '|', progressBar, '|')
+      progress.progress(getProgressBar(i));
+
       const cmd = [
         'node',
         `${LH_ROOT}/lighthouse-cli`,
@@ -124,18 +139,21 @@ function gather() {
         `--gather-mode=${gatherDir}`,
         argv.lhFlags,
       ].join(' ');
-      execSync(cmd, {stdio: 'ignore'});
+      await exec(cmd);
     }
   }
+  progress.closeProgress();
 }
 
-function audit() {
+async function audit() {
   const outputDir = dir(argv.name);
+  const progress = new ProgressLogger();
+  progress.log('Auditing…');
+
   for (const url of argv.urls) {
     for (let i = 0; i < argv.n; i++) {
       const gatherDir = `${outputDir}/${urlToFolder(url)}/${i}/`;
-      const progressBar = new Array(Math.round(i * 40/ argv.n)).fill('▄').join('').padEnd(40);
-      console.log(`Auditing:   `, '|', progressBar, '|')
+      progress.progress(getProgressBar(i));
 
       const cmd = [
         'node',
@@ -146,9 +164,10 @@ function audit() {
         '--output=json',
         argv.lhFlags,
       ].join(' ');
-      execSync(cmd, {stdio: 'ignore'});
+      await exec(cmd);
     }
   }
+  progress.closeProgress();
 }
 
 /**
@@ -334,12 +353,12 @@ function print(results) {
   }
 }
 
-function main() {
-  if (argv.gather) gather();
-  if (argv.audit) audit();
+async function main() {
+  if (argv.gather) await gather();
+  if (argv.audit) await audit();
   if (argv.collect) {
-    gather();
-    audit();
+    await gather();
+    await audit();
   }
   if (argv.summarize) summarize();
   if (argv.compare) compare();
