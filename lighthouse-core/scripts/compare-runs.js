@@ -50,7 +50,7 @@ const argv = yargs
   })
   .string('filter')
   .alias({'gather': 'G', 'audit': 'A'})
-  .default('report-exclude', 'min|max|stdev|^n$')
+  .default('report-exclude', 'key|min|max|stdev|^n$')
   .default('delta-property-sort', 'mean')
   .default('output', 'table')
   .array('urls')
