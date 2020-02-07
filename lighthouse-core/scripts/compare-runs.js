@@ -112,8 +112,8 @@ function round(value) {
 
 /**
  * Get box-drawing progress bar
- * @param {number} i 
- * @param {number} total 
+ * @param {number} i
+ * @param {number} total
  * @return {string}
  */
 function getProgressBar(i, total = argv.n * argv.urls.length) {
@@ -176,9 +176,8 @@ async function audit() {
 
 /**
  * @param {string} name
- * @param {string} resultType
  */
-function aggregateResults(name, resultType = 'timings') {
+function aggregateResults(name) {
   const outputDir = dir(name);
 
   // `${url}@@@${entry.name}` -> duration
@@ -307,6 +306,7 @@ function compare() {
 
     const mean = compareValues(baseResult && baseResult.mean, otherResult && otherResult.mean);
     const stdev = compareValues(baseResult && baseResult.stdev, otherResult && otherResult.stdev);
+    // eslint-disable-next-line max-len
     const cv = compareValues(baseResult && parseFloat(baseResult.CV), otherResult && parseFloat(otherResult.CV));
     const min = compareValues(baseResult && baseResult.min, otherResult && otherResult.min);
     const max = compareValues(baseResult && baseResult.max, otherResult && otherResult.max);
