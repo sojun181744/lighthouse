@@ -6,15 +6,15 @@
 'use strict';
 
 // Example:
-//     node lighthouse-core/scripts/compare-timings.js --name my-collection --collect -n 3 --lh-flags='--only-audits=unminified-javascript' --urls https://www.example.com https://www.nyt.com
-//     node lighthouse-core/scripts/compare-timings.js --name my-collection --summarize --measure-filter 'loadPage|connect'
-//     node lighthouse-core/scripts/compare-timings.js --name base --name pr --compare
+//     node lighthouse-core/scripts/compare-runs.js --name my-collection --collect -n 3 --lh-flags='--only-audits=unminified-javascript' --urls https://www.example.com https://www.nyt.com
+//     node lighthouse-core/scripts/compare-runs.js --name my-collection --summarize --measure-filter 'loadPage|connect'
+//     node lighthouse-core/scripts/compare-runs.js --name base --name pr --compare
 
 // The script will report both timings and perf metric results. View just one of them but using --filter:
-//     node lighthouse-core/scripts/compare-timings.js --summarize --name pr --filter=metric
+//     node lighthouse-core/scripts/compare-runs.js --summarize --name pr --filter=metric
 
 const fs = require('fs');
-const mkdirp = require('mkdirp');
+const mkdir = fs.promises.mkdir;
 const glob = require('glob');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
@@ -122,10 +122,10 @@ function getProgressBar(i, total = argv.n * argv.urls.length) {
 
 async function gather() {
   const outputDir = dir(argv.name);
-  mkdirp.sync(ROOT_OUTPUT_DIR);
+  await mkdir(ROOT_OUTPUT_DIR, {recursive: true});
   // Don't overwrite a previous collection
   if (fs.existsSync(outputDir)) throw new Error(`folder already exists: ${outputDir}`);
-  fs.mkdirSync(outputDir);
+  await mkdir(outputDir);
 
   const progress = new ProgressLogger();
   progress.log('Gathering…');
@@ -133,7 +133,7 @@ async function gather() {
   for (const url of argv.urls) {
     for (let i = 0; i < argv.n; i++) {
       const gatherDir = `${outputDir}/${urlToFolder(url)}/${i}/`;
-      mkdirp.sync(gatherDir);
+      await mkdir(gatherDir, {recursive: true});
       progress.progress(getProgressBar(i));
 
       const cmd = [
@@ -189,7 +189,9 @@ function aggregateResults(name) {
     /** @type {LH.Result} */
     const lhr = JSON.parse(lhrJson);
 
-    const metrics = /** @type {!LH.Audit.Details.Table} */ (lhr.audits.metrics.details).items[0];
+    const metrics = lhr.audits.metrics ?
+      /** @type {!LH.Audit.Details.Table} */ (lhr.audits.metrics.details).items[0] :
+      {};
     const allEntries = {
       metric: Object.entries(metrics).filter(([name]) => !name.endsWith('Ts')),
       timing: lhr.timing.entries.map(entry => ([entry.name, entry.duration])),
